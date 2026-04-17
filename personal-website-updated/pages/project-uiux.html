@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI/UX Study — Arya Satya Andhika Akbar</title>
+<link rel="stylesheet" href="../assets/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+.project-detail {
+  position: fixed;
+  inset: 30px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+
+.detail-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 80px 52px;
+  border-right: 1px solid var(--border);
+  animation: fadeInUp 0.9s ease both;
+}
+
+.detail-back {
+  position: absolute;
+  top: 40px;
+  left: 52px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  z-index: 20;
+}
+.detail-back:hover { color: var(--white); }
+
+.detail-number {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.detail-title {
+  font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: -3px;
+  text-transform: uppercase;
+  line-height: 0.95;
+  margin-bottom: 32px;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.detail-tag {
+  font-size: 0.7rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.detail-year {
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.detail-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--off-white);
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+  transition: border-color 0.2s, color 0.2s;
+  margin-top: 16px;
+  width: fit-content;
+}
+.detail-visit:hover { color: var(--white); border-color: var(--white); }
+
+.detail-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 52px 80px 60px;
+  animation: fadeInUp 0.9s ease both;
+  animation-delay: 0.15s;
+}
+
+.detail-desc-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.detail-desc {
+  font-size: 0.88rem;
+  color: var(--dim);
+  line-height: 2;
+  margin-bottom: 20px;
+}
+
+.detail-divider {
+  width: 32px;
+  height: 1px;
+  background: var(--border);
+  margin: 32px 0;
+}
+
+.detail-specs { display: flex; flex-direction: column; gap: 16px; }
+.spec-row { display: flex; gap: 24px; }
+.spec-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  min-width: 90px;
+}
+.spec-value { font-size: 0.82rem; color: var(--dim); }
+
+.project-nav {
+  position: absolute;
+  bottom: 34px;
+  right: 42px;
+  display: flex;
+  gap: 24px;
+  z-index: 20;
+}
+.project-nav a {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+}
+.project-nav a:hover { color: var(--white); }
+
+.bottom-left-year {
+  position: absolute;
+  bottom: 34px;
+  left: 52px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  z-index: 20;
+}
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div class="screen-border"></div>
+
+<div class="project-detail">
+  <a href="../pages/projects.html" class="detail-back">← Projects</a>
+
+  <!-- LEFT -->
+  <div class="detail-left">
+    <p class="detail-number">02 / 04</p>
+    <h1 class="detail-title">UI/UX<br>Study</h1>
+    <div class="detail-tags">
+      <span class="detail-tag">Figma</span>
+      <span class="detail-tag">Design System</span>
+      <span class="detail-tag">Prototype</span>
+      <span class="detail-tag">Research</span>
+    </div>
+    <p class="detail-year">2025 — Academic Project</p>
+    <a href="#" class="detail-visit">View prototype ↗</a>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="detail-right">
+    <p class="detail-desc-label">Overview</p>
+    <p class="detail-desc">
+      A UI/UX case study exploring how information architecture and visual
+      hierarchy can improve the usability of a digital product. The project
+      involved user research, wireframing, and high-fidelity prototyping
+      in Figma.
+    </p>
+    <p class="detail-desc">
+      Key focus areas included accessibility considerations, component-based
+      design systems, and iterative testing. The final prototype demonstrated
+      a measurable improvement in task completion rate compared to the
+      baseline interface.
+    </p>
+    <div class="detail-divider"></div>
+    <div class="detail-specs">
+      <div class="spec-row">
+        <span class="spec-label">Role</span>
+        <span class="spec-value">UI Designer &amp; Researcher</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Tools</span>
+        <span class="spec-value">Figma, FigJam, Notion</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Duration</span>
+        <span class="spec-value">4 weeks</span>
+      </div>
+      <div class="spec-row">
+        <span class="spec-label">Status</span>
+        <span class="spec-value">Completed</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="project-nav">
+    <a href="project-portfolio.html">← Prev</a>
+    <a href="project-creative-code.html">Next →</a>
+  </nav>
+  <div class="bottom-left-year">© 10129</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script src="../assets/js/sketch.js"></script>
+</body>
+</html>

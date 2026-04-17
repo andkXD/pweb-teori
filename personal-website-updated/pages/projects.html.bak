@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Arya Satya Andhika Akbar</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div id="canvas-container"></div>
+  <div class="screen-border"></div>
+
+  <!-- Header Projects -->
+  <header class="projects-page-header">
+    <a href="../index.html" class="back-link">← Back</a>
+    <h1>Projects</h1>
+  </header>
+
+  <!-- List Projects -->
+  <main class="projects-content">
+    <div class="projects-list">
+
+      <div class="project-item">
+        <a href="project-portfolio.html">
+          <span class="project-title">Portfolio</span>
+          <span class="project-meta">2025 / HTML · CSS · p5.js</span>
+        </a>
+      </div>
+
+      <div class="project-item">
+        <a href="project-uiux.html">
+          <span class="project-title">UI/UX Study</span>
+          <span class="project-meta">2025 / Figma · Design System</span>
+        </a>
+      </div>
+
+      <div class="project-item">
+        <a href="project-creative-code.html">
+          <span class="project-title">Creative Code</span>
+          <span class="project-meta">2024 / JavaScript · Canvas</span>
+        </a>
+      </div>
+
+      <div class="project-item">
+        <a href="project-web-experiment.html">
+          <span class="project-title">Web Experiment</span>
+          <span class="project-meta">2024 / HTML · CSS · Animation</span>
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Keterangan kiri bawah -->
+  <div class="bottom-left-year">© 10129</div>
+
+  <!-- Hint kanan bawah -->
+  <div class="bottom-right">
+    <p>Hover to explore.</p>
+    <p>Click to view.</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <script src="sketch.js"></script>
+</body>
+</html>

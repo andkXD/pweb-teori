@@ -1,0 +1,461 @@
+/* ============================================
+   RESET & BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #ffffff;
+  --off-white: #e0e0e0;
+  --muted: #888888;
+  --dim: #bbbbbb;
+  --black: #000000;
+  --border: rgba(255, 255, 255, 0.18);
+  --overlay-bg: rgba(0, 0, 0, 0.92);
+  --font: 'Roboto Mono', monospace;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  background-color: var(--black);
+  color: var(--white);
+  cursor: crosshair;
+}
+
+/* ============================================
+   CANVAS BACKGROUND
+   ============================================ */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   SCREEN BORDER
+   ============================================ */
+.screen-border {
+  position: fixed;
+  top: 28px;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+  border: 1px solid var(--border);
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Corner decorations */
+.screen-border::before,
+.screen-border::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--white);
+  border-style: solid;
+}
+
+.screen-border::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.screen-border::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+/* ============================================
+   HEADER — TOP LEFT
+   ============================================ */
+.top-left {
+  position: fixed;
+  top: 70px;
+  left: 72px;
+  z-index: 10;
+  animation: fadeInUp 1s ease both;
+}
+
+.site-title {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 300;
+  letter-spacing: -1.5px;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.role {
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 44px;
+  font-style: italic;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+.main-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: var(--off-white);
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px 3px 0;
+  width: fit-content;
+  position: relative;
+  transition: color 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.nav-dot {
+  font-size: 0.5rem;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--white);
+  transition: width 0.3s ease;
+}
+
+.main-nav a:hover {
+  color: var(--white);
+}
+
+.main-nav a:hover .nav-dot {
+  color: var(--white);
+}
+
+.main-nav a:hover::after {
+  width: 100%;
+}
+
+/* ============================================
+   FOOTER — BOTTOM RIGHT
+   ============================================ */
+.bottom-right {
+  position: fixed;
+  bottom: 64px;
+  right: 72px;
+  text-align: right;
+  z-index: 10;
+  animation: fadeInUp 1.2s ease both;
+  animation-delay: 0.3s;
+}
+
+.bottom-right p {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--dim);
+}
+
+/* ============================================
+   YEAR — BOTTOM LEFT
+   ============================================ */
+.bottom-left-year {
+  position: fixed;
+  bottom: 64px;
+  left: 72px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  z-index: 10;
+  letter-spacing: 0.05em;
+  animation: fadeInUp 1.2s ease both;
+  animation-delay: 0.5s;
+}
+
+/* ============================================
+   OVERLAY SECTIONS (Info, Contact, FAQ)
+   ============================================ */
+.overlay-section {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  backdrop-filter: blur(4px);
+}
+
+.overlay-section.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.overlay-inner {
+  position: relative;
+  max-width: 560px;
+  width: 90%;
+  padding: 60px 0;
+  animation: none;
+}
+
+.overlay-section.active .overlay-inner {
+  animation: slideInOverlay 0.4s ease both;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 40px;
+  font-weight: 400;
+}
+
+.section-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.section-content p {
+  font-size: 0.88rem;
+  color: var(--dim);
+  line-height: 1.9;
+}
+
+.section-content strong {
+  display: block;
+  color: var(--white);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.section-content a {
+  color: var(--off-white);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+
+.section-content a:hover {
+  border-color: var(--white);
+}
+
+.section-content .note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  cursor: crosshair;
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--white);
+}
+
+/* ============================================
+   FAQ STYLES
+   ============================================ */
+.faq-list {
+  gap: 32px !important;
+}
+
+.faq-item {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.faq-q {
+  color: var(--off-white) !important;
+  font-size: 0.88rem !important;
+  margin-bottom: 10px;
+}
+
+.faq-a {
+  color: var(--muted) !important;
+  font-size: 0.82rem !important;
+  line-height: 1.8 !important;
+}
+
+/* ============================================
+   PROJECTS PAGE
+   ============================================ */
+.projects-page-header {
+  position: fixed;
+  top: 70px;
+  left: 72px;
+  z-index: 10;
+  animation: fadeInUp 0.8s ease both;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--white);
+}
+
+.projects-page-header h1 {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.projects-content {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-right: 80px;
+  z-index: 5;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+.project-item {
+  width: 100%;
+  text-align: right;
+}
+
+.project-item a {
+  text-decoration: none;
+  color: var(--white);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  opacity: 0.22;
+  transition: opacity 0.4s ease;
+  padding: 8px 0;
+}
+
+.project-item a:hover {
+  opacity: 1;
+}
+
+.project-title {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 300;
+  letter-spacing: -3px;
+  text-transform: uppercase;
+  line-height: 1;
+  transition: letter-spacing 0.4s ease;
+}
+
+.project-item a:hover .project-title {
+  letter-spacing: -1px;
+}
+
+.project-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.project-item a:hover .project-meta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInOverlay {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   CUSTOM CURSOR TRAIL (subtle)
+   ============================================ */
+.cursor-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--white);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  mix-blend-mode: difference;
+}
