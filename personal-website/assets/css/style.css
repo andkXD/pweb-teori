@@ -459,3 +459,110 @@ body {
   transition: transform 0.1s ease;
   mix-blend-mode: difference;
 }
+/* ============================================
+   NOW PLAYING WIDGET
+   ============================================ */
+.now-playing {
+  position: fixed;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  animation: fadeInUp 1.4s ease both;
+  animation-delay: 0.8s;
+  user-select: none;
+}
+
+.np-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--white);
+  flex-shrink: 0;
+  animation: npPulse 2s ease infinite;
+}
+
+@keyframes npPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.4); }
+}
+
+.np-text {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.np-text::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--white);
+  transition: width 0.4s ease;
+}
+
+.now-playing:hover .np-text {
+  color: var(--white);
+}
+
+.now-playing:hover .np-text::after {
+  width: 100%;
+}
+
+.now-playing:hover .np-dot {
+  animation: npPulse 0.6s ease infinite;
+}
+
+/* Muted state */
+.now-playing.muted .np-dot {
+  animation: none;
+  opacity: 0.2;
+}
+
+.now-playing.muted .np-text {
+  opacity: 0.4;
+}
+
+/* Waveform bars (tiny EQ visualizer) */
+.np-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+
+.np-bar {
+  width: 2px;
+  background: var(--muted);
+  border-radius: 1px;
+  transition: background 0.3s;
+}
+
+.np-bar:nth-child(1) { animation: npBar 1.1s ease infinite; }
+.np-bar:nth-child(2) { animation: npBar 0.8s ease infinite 0.15s; }
+.np-bar:nth-child(3) { animation: npBar 1.3s ease infinite 0.05s; }
+.np-bar:nth-child(4) { animation: npBar 0.9s ease infinite 0.3s; }
+
+@keyframes npBar {
+  0%, 100% { height: 3px; }
+  50%       { height: 10px; }
+}
+
+.now-playing:hover .np-bar { background: var(--white); }
+
+.now-playing.muted .np-bar {
+  animation: none;
+  height: 3px;
+  opacity: 0.2;
+}
