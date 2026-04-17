@@ -464,8 +464,9 @@ body {
    ============================================ */
 .now-playing {
   position: fixed;
-  top: 64px;
-  right: 72px;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
   display: flex;
   align-items: center;
