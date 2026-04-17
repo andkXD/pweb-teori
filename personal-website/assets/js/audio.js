@@ -1,19 +1,26 @@
 // ============================================
-// GLOBAL AUDIO PLAYER — persists across pages
+// GLOBAL AUDIO PLAYER — seamless across pages
+// Playlist loops: nc17 → Von → nc17 → ...
 // ============================================
 
 (function () {
-  // Resolve audio path relative to current page
-  const depth = window.location.pathname.split('/').filter(Boolean).length;
-  // if inside /pages/ depth will be higher → need ../assets
-  const prefix = document.querySelector('link[href*="assets/css"]')
-    ?.getAttribute('href')
-    ?.replace('assets/css/style.css', '') || '../';
+  // ── Resolve base path ────────────────────────
+  const cssLink = document.querySelector('link[href*="assets/css"]');
+  const prefix  = cssLink
+    ? cssLink.getAttribute('href').replace('assets/css/style.css', '')
+    : '../';
 
-  const SONG_NAME = 'nc17';
-  const SONG_PATH = prefix + 'assets/audio/nc17.mp3';
+  const PLAYLIST = [
+    { name: 'nc17', path: prefix + 'assets/audio/nc17.mp3' },
+    { name: 'Von',  path: prefix + 'assets/audio/Von.mp3'  },
+  ];
 
-  // ── Inject widget HTML ──────────────────────
+  // ── Restore state from sessionStorage ────────
+  let currentIndex = parseInt(sessionStorage.getItem('ap_index') || '0', 10);
+  let currentTime  = parseFloat(sessionStorage.getItem('ap_time')  || '0');
+  let isMuted      = sessionStorage.getItem('ap_muted') === 'true';
+
+  // ── Build widget ─────────────────────────────
   const widget = document.createElement('div');
   widget.className = 'now-playing';
   widget.id = 'nowPlaying';
@@ -25,44 +32,78 @@
       <div class="np-bar"></div>
     </div>
     <span class="np-dot"></span>
-    <span class="np-text">Now playing — "${SONG_NAME}"</span>
+    <span class="np-text">Now playing — "${PLAYLIST[currentIndex].name}"</span>
   `;
   document.body.appendChild(widget);
 
-  // ── Audio setup ─────────────────────────────
-  const audio = new Audio(SONG_PATH);
-  audio.loop   = true;
+  // ── Audio setup ──────────────────────────────
+  const audio = new Audio();
   audio.volume = 0.35;
+  audio.muted  = isMuted;
 
-  let muted = false;
+  function loadTrack(index, startTime) {
+    audio.src = PLAYLIST[index].path;
+    audio.currentTime = startTime || 0;
+    const textEl = widget.querySelector('.np-text');
+    textEl.textContent = isMuted
+      ? `Muted — "${PLAYLIST[index].name}"`
+      : `Now playing — "${PLAYLIST[index].name}"`;
+  }
 
-  // Try autoplay; browsers may block until interaction
+  function playTrack(index, startTime) {
+    loadTrack(index, startTime);
+    audio.play().catch(() => {});
+  }
+
+  // On track end → advance to next
+  audio.addEventListener('ended', () => {
+    currentIndex = (currentIndex + 1) % PLAYLIST.length;
+    sessionStorage.setItem('ap_index', currentIndex);
+    sessionStorage.setItem('ap_time', '0');
+    playTrack(currentIndex, 0);
+  });
+
+  // Save position every second
+  setInterval(() => {
+    if (!audio.paused) {
+      sessionStorage.setItem('ap_time',  audio.currentTime.toFixed(2));
+      sessionStorage.setItem('ap_index', currentIndex);
+      sessionStorage.setItem('ap_muted', isMuted);
+    }
+  }, 1000);
+
+  // Save right before navigating away
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('ap_time',  audio.currentTime.toFixed(2));
+    sessionStorage.setItem('ap_index', currentIndex);
+    sessionStorage.setItem('ap_muted', isMuted);
+  });
+
+  // ── Initial play ──────────────────────────────
   function tryPlay() {
+    loadTrack(currentIndex, currentTime);
     audio.play().catch(() => {
-      // If blocked, play on first user interaction
       const unlock = () => {
         audio.play();
-        document.removeEventListener('click', unlock);
-        document.removeEventListener('keydown', unlock);
-        document.removeEventListener('wheel', unlock);
+        ['click','keydown','wheel'].forEach(e => document.removeEventListener(e, unlock));
       };
-      document.addEventListener('click', unlock);
-      document.addEventListener('keydown', unlock);
-      document.addEventListener('wheel', unlock);
+      ['click','keydown','wheel'].forEach(e => document.addEventListener(e, unlock));
     });
   }
 
   tryPlay();
 
-  // ── Click to mute / unmute ──────────────────
+  // ── Mute / unmute on click ────────────────────
   widget.addEventListener('click', () => {
-    muted = !muted;
-    audio.muted = muted;
-    widget.classList.toggle('muted', muted);
-
+    isMuted = !isMuted;
+    audio.muted = isMuted;
+    sessionStorage.setItem('ap_muted', isMuted);
+    widget.classList.toggle('muted', isMuted);
     const textEl = widget.querySelector('.np-text');
-    textEl.textContent = muted
-      ? `Muted — "${SONG_NAME}"`
-      : `Now playing — "${SONG_NAME}"`;
+    textEl.textContent = isMuted
+      ? `Muted — "${PLAYLIST[currentIndex].name}"`
+      : `Now playing — "${PLAYLIST[currentIndex].name}"`;
   });
+
+  if (isMuted) widget.classList.add('muted');
 })();
