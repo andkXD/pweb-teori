@@ -1,5 +1,5 @@
 // ============================================
-// NOISE DRIFT — more particles, stronger mouse react
+// NOISE DRIFT — theme-aware particles
 // ============================================
 
 let cells = [];
@@ -27,7 +27,14 @@ function initCells() {
 }
 
 function draw() {
-  fill(0, 28);
+  const isLight = window.__THEME__ === 'light';
+
+  // Background trail — matches body bg
+  if (isLight) {
+    fill(242, 240, 235, 30); // cream
+  } else {
+    fill(0, 0, 0, 28);
+  }
   noStroke();
   rect(0, 0, width, height);
 
@@ -44,35 +51,43 @@ function draw() {
     let d     = sqrt(dx * dx + dy * dy);
     let boost = d < 200 ? map(d, 0, 200, 200, 0) : 0;
 
-    // Partikel dalam radius mouse juga bergerak menjauhi cursor
     if (d < 120) {
       c.vx -= (dx / d) * 0.15;
       c.vy -= (dy / d) * 0.15;
-      // Speed cap
       let spd = sqrt(c.vx * c.vx + c.vy * c.vy);
       if (spd > 2.5) { c.vx *= 2.5 / spd; c.vy *= 2.5 / spd; }
     } else {
-      // Perlahan balik ke kecepatan normal
       c.vx *= 0.995;
       c.vy *= 0.995;
     }
 
     let finalA = min(255, c.a + boost);
-    fill(255, 255, 255, finalA);
+
+    // Light mode: dark particles; dark mode: white particles
+    if (isLight) {
+      fill(30, 30, 30, finalA);
+    } else {
+      fill(255, 255, 255, finalA);
+    }
     ellipse(c.x, c.y, c.sz, c.sz);
   }
 
-  drawVignette();
+  drawVignette(isLight);
 }
 
-function drawVignette() {
+function drawVignette(isLight) {
   let ctx = drawingContext;
   let grad = ctx.createRadialGradient(
     width / 2, height / 2, height * 0.08,
     width / 2, height / 2, height * 0.9
   );
-  grad.addColorStop(0, 'rgba(0,0,0,0)');
-  grad.addColorStop(1, 'rgba(0,0,0,0.88)');
+  if (isLight) {
+    grad.addColorStop(0, 'rgba(242,240,235,0)');
+    grad.addColorStop(1, 'rgba(242,240,235,0.82)');
+  } else {
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.88)');
+  }
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, width, height);
 }

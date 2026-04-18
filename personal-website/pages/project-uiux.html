@@ -138,7 +138,54 @@
   letter-spacing: 0.08em; transition: color 0.2s;
 }
 .project-nav a:hover { color: var(--white); }
+
+/* ============================================
+   LIGHT MODE OVERRIDES — project pages
+   ============================================ */
+body.theme-light .detail-desc,
+body.theme-light .code-line {
+  color: rgba(0, 0, 0, 0.55);
+}
+body.theme-light .spec-value,
+body.theme-light .spec-val,
+body.theme-light .process-text,
+body.theme-light .exp-name,
+body.theme-light .exp-tile-name,
+body.theme-light .tl-name {
+  color: #333;
+}
+body.theme-light .type-specimen {
+  color: rgba(0, 0, 0, 0.08);
+}
+body.theme-light .type-specimen span {
+  color: rgba(0, 0, 0, 0.25);
+}
+body.theme-light .detail-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .detail-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+body.theme-light .sidebar-visit {
+  color: #111;
+  border-color: rgba(0,0,0,0.3);
+}
+body.theme-light .sidebar-visit:hover {
+  background: rgba(0,0,0,0.05);
+  border-color: rgba(0,0,0,0.7);
+}
+
+body.theme-light .dot-bg {
+  background-image: radial-gradient(rgba(0,0,0,0.09) 1px, transparent 1px);
+}
+body.theme-light .spec-group-label { color: #888; border-bottom-color: rgba(0,0,0,0.1); }
+body.theme-light .process-num { color: #888; }
+
 </style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 <div class="dot-bg"></div>
@@ -223,5 +270,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 <script src="../assets/js/sketch.js"></script>
 <script src="../assets/js/audio.js"></script>
+  <script src="../assets/js/theme.js"></script>
 </body>
 </html>

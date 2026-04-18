@@ -190,6 +190,8 @@
       opacity: 1; transform: translateX(0); color: var(--white);
     }
   </style>
+  <!-- No-flash theme apply: set on <html> so it works before <body> exists -->
+  <script>try{var t=localStorage.getItem("pw-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){}</script>
 </head>
 <body>
 
@@ -388,5 +390,6 @@
       if (Math.abs(dy) > 40) handleNav(dy > 0 ? 1 : -1);
     });
   </script>
+  <script src="../assets/js/theme.js"></script>
 </body>
 </html>

@@ -465,8 +465,11 @@ body {
 .now-playing {
   position: fixed;
   top: 48px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  width: fit-content;
+  margin: 0 auto;
+  transform: none;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -657,4 +660,167 @@ body {
 @keyframes introLine {
   from { width: 0; opacity: 0; }
   to   { width: 120px; opacity: 1; }
+}
+
+/* ============================================
+   THEME SWITCHER WIDGET
+   Vertical right-side, like p5aholic.me
+   ============================================ */
+.theme-switcher {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.theme-switcher-inner {
+  display: flex;
+  flex-direction: row; /* items flow top→bottom via writing-mode */
+  align-items: center;
+  gap: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  cursor: crosshair;
+  font-family: var(--font);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  transition: color 0.2s ease, font-weight 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+}
+
+.theme-btn:last-child {
+  border-bottom: none;
+}
+
+.theme-btn:hover {
+  color: var(--white);
+}
+
+.theme-btn.active {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* The □/■ indicator square */
+.theme-btn-indicator {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border: 1px solid currentColor;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.theme-btn.active .theme-btn-indicator {
+  background: currentColor;
+}
+
+/* ============================================
+   LIGHT MODE THEME
+   ============================================ */
+body.theme-light {
+  background-color: #f2f0eb;
+  color: #111111;
+}
+
+body.theme-light {
+  --white:      #111111;
+  --off-white:  #2a2a2a;
+  --muted:      #888888;
+  --dim:        #444444;
+  --black:      #f2f0eb;
+  --border:     rgba(0, 0, 0, 0.15);
+  --overlay-bg: rgba(242, 240, 235, 0.95);
+}
+
+body.theme-light .screen-border {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+body.theme-light .screen-border::before,
+body.theme-light .screen-border::after {
+  border-color: #111111;
+}
+
+body.theme-light .theme-btn {
+  color: #999;
+  font-weight: 400;
+}
+body.theme-light .theme-btn:hover {
+  color: #111;
+  font-weight: 500;
+}
+body.theme-light .theme-btn.active {
+  color: #000;
+  font-weight: 500;
+}
+/* theme-switcher-inner has no border — nothing to override */
+
+body.theme-light .now-playing {
+  color: #111;
+}
+body.theme-light .np-dot {
+  background: #111;
+}
+body.theme-light .np-bar {
+  background: #888;
+}
+body.theme-light .now-playing:hover .np-bar {
+  background: #111;
+}
+
+body.theme-light .cursor-dot {
+  background: #111;
+  mix-blend-mode: multiply;
+}
+
+/* ============================================
+   DARK MODE (explicit, default is already dark)
+   ============================================ */
+body.theme-dark {
+  --white:      #ffffff;
+  --off-white:  #e0e0e0;
+  --muted:      #888888;
+  --dim:        #bbbbbb;
+  --black:      #000000;
+  --border:     rgba(255, 255, 255, 0.18);
+  --overlay-bg: rgba(0, 0, 0, 0.92);
+  background-color: #000000;
+  color: #ffffff;
+}
+
+/* Smooth theme transition */
+body {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* ============================================
+   HTML-LEVEL THEME (no-flash: set on <html>
+   before <body> exists)
+   ============================================ */
+html[data-theme="light"] {
+  background: #f2f0eb;
+}
+html[data-theme="dark"] {
+  background: #000000;
 }
