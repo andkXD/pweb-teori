@@ -1,78 +1,78 @@
 // ============================================
-// NOISE DRIFT — theme-aware particles
+// FIBONACCI FOREVER — 2D Canvas, theme-aware
+// Port of genuary2026 day 03 by p5aholic
 // ============================================
 
-let cells = [];
-const COUNT = 300;
+let sequence;
+let cnv;
+let types;
+let tindex;
 
 function setup() {
-  let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('canvas-container');
+  cnv = createCanvas(windowWidth, windowHeight);
+  cnv.parent('canvas-container');
   frameRate(30);
-  initCells();
-}
-
-function initCells() {
-  cells = [];
-  for (let i = 0; i < COUNT; i++) {
-    cells.push({
-      x:  random(width),
-      y:  random(height),
-      vx: (random(1) - 0.5) * 0.6,
-      vy: (random(1) - 0.5) * 0.6,
-      a:  random(15, 80),
-      sz: random(0.8, 2.8),
-    });
-  }
+  colorMode(RGB, 255);
+  types = [OPEN, CHORD, PIE];
+  tindex = 0;
+  sequence = generateFibonacci(15);
+  background(0);
 }
 
 function draw() {
   const isLight = window.__THEME__ === 'light';
 
-  // Background trail — matches body bg
+  // Trail fade — exact same as original
   if (isLight) {
-    fill(242, 240, 235, 30); // cream
+    fill(242, 240, 235, 18);
   } else {
-    fill(0, 0, 0, 28);
+    fill(0, 0, 0, 20);
   }
   noStroke();
   rect(0, 0, width, height);
 
-  noStroke();
-  for (let c of cells) {
-    c.x += c.vx;
-    c.y += c.vy;
+  // dim oscillates — drives both rotation AND spiral size
+  let dim = 2 * TWO_PI * sin(frameCount / 300);
 
-    if (c.x < 0 || c.x > width)  c.vx *= -1;
-    if (c.y < 0 || c.y > height) c.vy *= -1;
+  // Center + scale so spiral is large and fills the screen nicely
+  let scaleFactor = min(width, height) * 0.013;
 
-    let dx    = mouseX - c.x;
-    let dy    = mouseY - c.y;
-    let d     = sqrt(dx * dx + dy * dy);
-    let boost = d < 200 ? map(d, 0, 200, 200, 0) : 0;
-
-    if (d < 120) {
-      c.vx -= (dx / d) * 0.15;
-      c.vy -= (dy / d) * 0.15;
-      let spd = sqrt(c.vx * c.vx + c.vy * c.vy);
-      if (spd > 2.5) { c.vx *= 2.5 / spd; c.vy *= 2.5 / spd; }
-    } else {
-      c.vx *= 0.995;
-      c.vy *= 0.995;
-    }
-
-    let finalA = min(255, c.a + boost);
-
-    // Light mode: dark particles; dark mode: white particles
-    if (isLight) {
-      fill(30, 30, 30, finalA);
-    } else {
-      fill(255, 255, 255, finalA);
-    }
-    ellipse(c.x, c.y, c.sz, c.sz);
-  }
+  push();
+  translate(width / 2, height / 2);
+  rotate(dim / 2);
+  drawCurl(dim, scaleFactor, isLight);
+  pop();
 
   drawVignette(isLight);
+}
+
+function drawCurl(dim, scaleFactor, isLight) {
+  noFill();
+
+  for (let i = 0; i < sequence.length; i++) {
+    let r = sequence[i] * dim * scaleFactor;
+
+    // Vary alpha slightly per ring for depth
+    let a = 45 + (i / sequence.length) * 20;
+    if (isLight) {
+      stroke(20, 20, 20, a);
+    } else {
+      stroke(255, 255, 255, a);
+    }
+    strokeWeight(0.3);
+
+    // Translate along golden-ratio path — exact port of original
+    if (i > 2) {
+      translate(
+        -(sequence[i - 1] * abs(dim) * scaleFactor) / 2 +
+          (sequence[i - 3] * abs(dim) * scaleFactor) / 2,
+        0
+      );
+    }
+
+    arc(0, 0, r, r, 0, HALF_PI, types[tindex]);
+    rotate(HALF_PI);
+  }
 }
 
 function drawVignette(isLight) {
@@ -82,17 +82,37 @@ function drawVignette(isLight) {
     width / 2, height / 2, height * 0.9
   );
   if (isLight) {
-    grad.addColorStop(0, 'rgba(242,240,235,0)');
-    grad.addColorStop(1, 'rgba(242,240,235,0.82)');
+    grad.addColorStop(0,   'rgba(242,240,235,0)');
+    grad.addColorStop(0.55,'rgba(242,240,235,0.05)');
+    grad.addColorStop(1,   'rgba(242,240,235,0.88)');
   } else {
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.88)');
+    grad.addColorStop(0,   'rgba(0,0,0,0)');
+    grad.addColorStop(0.55,'rgba(0,0,0,0.05)');
+    grad.addColorStop(1,   'rgba(0,0,0,0.88)');
   }
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, width, height);
 }
 
+function mousePressed() {
+  tindex = (tindex + 1) % types.length;
+  // clear on mode switch like original
+  if (window.__THEME__ === 'light') {
+    background(242, 240, 235);
+  } else {
+    background(0);
+  }
+}
+
+function generateFibonacci(n) {
+  let fib = [0, 1];
+  for (let i = 2; i < n; i++) {
+    fib.push(fib[i - 1] + fib[i - 2]);
+  }
+  return fib;
+}
+
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  initCells();
+  background(0);
 }
