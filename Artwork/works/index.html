@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Works — Arya Satya Andhika Akbar</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="../index.html">Top</a>
+    <a href="index.html" class="active">Works</a>
+    <a href="../info.html">Info</a>
+  </nav>
+
+  <div class="works-page">
+
+    <!-- LEFT: scrollable list -->
+    <div class="works-left" id="worksList">
+      <div class="works-left-header">
+        <h1>Works</h1>
+        <span id="worksCount"></span>
+      </div>
+      <!-- rows injected by JS -->
+    </div>
+
+    <!-- RIGHT: sticky image preview -->
+    <div class="works-right" id="worksRight">
+      <!-- slides injected by JS -->
+      <div class="works-right-info" id="rightInfo">
+        <h2 id="rightTitle"></h2>
+        <p id="rightCat"></p>
+      </div>
+      <a class="works-right-arrow" id="rightArrow" href="#">↗</a>
+    </div>
+
+  </div>
+
+  <script src="../js/works-data.js"></script>
+  <script src="../js/main.js"></script>
+  <script>
+    const list      = document.getElementById('worksList');
+    const right     = document.getElementById('worksRight');
+    const rightInfo = document.getElementById('rightInfo');
+    const rightTitle= document.getElementById('rightTitle');
+    const rightCat  = document.getElementById('rightCat');
+    const rightArrow= document.getElementById('rightArrow');
+
+    document.getElementById('worksCount').textContent = WORKS.length + ' Items';
+
+    let activeIdx = 0;
+
+    // Build slides (right panel)
+    WORKS.forEach((work, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'works-right-slide' + (i === 0 ? ' visible' : '');
+      slide.id = 'slide-' + i;
+
+      if (work.img) {
+        slide.innerHTML = `<img class="slide-img" src="${work.img}" alt="${work.title}">`;
+      } else {
+        slide.innerHTML = `
+          <div class="slide-ph">
+            <span class="slide-ph-num">${work.num}</span>
+            <span class="slide-ph-title">${work.title}</span>
+          </div>`;
+      }
+      right.insertBefore(slide, rightInfo);
+    });
+
+    // Build list rows (left panel)
+    WORKS.forEach((work, i) => {
+      const row = document.createElement('a');
+      row.href = work.id + '.html';
+      row.className = 'work-row' + (i === 0 ? ' active' : '');
+      row.dataset.idx = i;
+
+      row.innerHTML = `
+        <div class="work-row-inner">
+          <span class="work-row-num">#${work.num}</span>
+          <div class="work-row-thumb">
+            ${work.img ? `<img src="${work.img}" alt="${work.title}" loading="lazy">` : ''}
+          </div>
+          <div class="work-row-info">
+            <div class="work-row-title">${work.title}</div>
+            <div class="work-row-cat">${work.category} · ${work.year}</div>
+          </div>
+        </div>`;
+
+      // Hover: switch preview
+      row.addEventListener('mouseenter', () => switchTo(i));
+      list.appendChild(row);
+    });
+
+    // Init right panel
+    setRightInfo(0);
+    setRightInfo(0, true);
+
+    function switchTo(idx) {
+      if (idx === activeIdx) return;
+      // Update rows
+      document.querySelectorAll('.work-row').forEach((r, i) => {
+        r.classList.toggle('active', i === idx);
+      });
+      // Update slides
+      document.querySelectorAll('.works-right-slide').forEach((s, i) => {
+        s.classList.toggle('visible', i === idx);
+      });
+      activeIdx = idx;
+      setRightInfo(idx, true);
+    }
+
+    function setRightInfo(idx, animate) {
+      const w = WORKS[idx];
+      rightTitle.textContent = w.title;
+      rightCat.textContent   = w.category + ' · ' + w.year;
+      rightArrow.href        = w.id + '.html';
+      if (animate) {
+        rightInfo.classList.remove('show');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => rightInfo.classList.add('show'));
+        });
+        rightArrow.classList.add('show');
+      }
+    }
+
+    // Intercept arrow link to use page transition
+    rightArrow.addEventListener('click', e => {
+      e.preventDefault();
+      const pt = document.querySelector('.pt');
+      pt.style.transform = '';
+      pt.style.transformOrigin = 'bottom';
+      pt.classList.add('in');
+      pt.addEventListener('animationend', () => {
+        window.location.href = rightArrow.href;
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio — Arya Satya Andhika Akbar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <a href="../personal-website/pages/project-portfolio.html" class="site-nav-back">← Portfolio</a>
+    <a href="index.html" class="active">Top</a>
+    <a href="works/index.html">Works</a>
+    <a href="info.html">Info</a>
+  </nav>
+
+  <section class="home-hero">
+    <div class="home-hero-side">
+      <p>Student & Developer</p>
+      <p>Malang, Indonesia</p>
+      <p>Class of 2024</p>
+    </div>
+    <h1>Selected<br><em>Works</em></h1>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-inner">
+      <span>Creative Coding</span><span>·</span>
+      <span>Generative Art</span><span>·</span>
+      <span>Motion Design</span><span>·</span>
+      <span>Web Experiments</span><span>·</span>
+      <span>UI / UX</span><span>·</span>
+      <span>Typography</span><span>·</span>
+      <span>Creative Coding</span><span>·</span>
+      <span>Generative Art</span><span>·</span>
+      <span>Motion Design</span><span>·</span>
+      <span>Web Experiments</span><span>·</span>
+      <span>UI / UX</span><span>·</span>
+      <span>Typography</span><span>·</span>
+    </div>
+  </div>
+
+  <section class="home-works">
+    <div class="home-works-hd fu">
+      <h2>Recent Works</h2>
+      <a href="works/index.html">View all →</a>
+    </div>
+    <div class="home-grid" id="homeGrid"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Arya Satya Andhika Akbar</p>
+    <p>Information Systems · Class of 2024</p>
+  </footer>
+
+  <script src="js/works-data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const grid = document.getElementById('homeGrid');
+    WORKS.slice(0, 6).forEach(work => {
+      const a = document.createElement('a');
+      a.href = 'works/' + work.id + '.html';
+      a.className = 'home-grid-item';
+      a.innerHTML = work.img
+        ? `<img src="${work.img}" alt="${work.title}" loading="lazy">`
+        : `<div class="home-grid-ph">${work.num} — ${work.title}</div>`;
+      grid.appendChild(a);
+    });
+  </script>
+</body>
+</html>
